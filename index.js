@@ -56,20 +56,24 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  const newUser = req.body;
-  console.log("fytfbtfb", newUser);
+  const user = req.body;
+  console.log("fytfbtfb", user);
   const client = await pool.connect();
-  const Query = `INSERT INTO users (name, email, password, id) VALUES ('${newUser.name}','${newUser.email}','${newUser.password}','${newUser.id}');`;
+  const Query = `SELECT * FROM users email = '${user.email}' and password = '${user.password}';`;
   try {
     client.query(Query);
+    // if (response == true) {
+    //   return res.status(200).response({ success: true });
+    // } else {
+    //   return res.status(500).response({ success: false });
+    // }
+    console.log(response);
   } catch (e) {
     console.log(e);
   } finally {
     client.release();
     console.log("user add successfully");
   }
-
-  res.status(200).send({ message: "User Added successfully" });
 });
 
 // async function getPgVersion() {
