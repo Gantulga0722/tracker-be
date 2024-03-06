@@ -59,15 +59,16 @@ app.post("/login", async (req, res) => {
   const user = req.body;
   console.log("fytfbtfb", user);
   const client = await pool.connect();
-  const Query = `SELECT * FROM users email = '${user.email}' and password = '${user.password}';`;
+  const Query = `SELECT * FROM users WHERE (email='${user.email}' AND password='${user.password}');`;
+
   try {
-    client.query(Query);
-    // if (response == true) {
-    //   return res.status(200).response({ success: true });
-    // } else {
-    //   return res.status(500).response({ success: false });
-    // }
-    console.log(response);
+    const response = client.query(Query);
+    if (response) {
+      return res.status(200).send({ success: "true" });
+    } else {
+      return res.status(500).send({ success: "false" });
+      console.log(response);
+    }
   } catch (e) {
     console.log(e);
   } finally {
