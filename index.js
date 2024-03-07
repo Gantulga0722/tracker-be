@@ -63,11 +63,12 @@ app.post("/login", async (req, res) => {
 
   try {
     const response = client.query(Query);
-    if (response) {
+    console.log("response", { response });
+    if (response["rowCount"]) {
       return res.status(200).send({ success: "true" });
     } else {
-      return res.status(500).send({ success: "false" });
       console.log(response);
+      return res.status(500).send({ success: "false" });
     }
   } catch (e) {
     console.log(e);
