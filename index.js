@@ -46,9 +46,9 @@ app.post("/login", async (req, res) => {
   const user = req.body;
   const client = await pool.connect();
   const Query = `SELECT * FROM users WHERE (email='${user.email}' AND password='${user.password}');`;
+
   try {
     const response = client.query(Query);
-
     if (response["rowCount"]) {
       return res.status(200).send({ success: "true" });
     } else {
@@ -94,6 +94,21 @@ app.post("/add-category", async (req, res) => {
   } finally {
     client.release();
     console.log("category added successfully");
+  }
+});
+
+app.post("/user-id", async (req, res) => {
+  const request = req.body;
+  const client = await pool.connect();
+  const Query = `SELECT id FROM users WHERE (email='${request.email}' AND password='${request.password}');`;
+  try {
+    client.query(Query);
+    res.status(200).send({ id: "id" });
+  } catch (e) {
+    console.log(e);
+  } finally {
+    client.release();
+    console.log("Id is picked");
   }
 });
 
