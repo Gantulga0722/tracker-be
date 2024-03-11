@@ -48,9 +48,10 @@ app.post("/login", async (req, res) => {
   const Query = `SELECT * FROM users WHERE (email='${user.email}' AND password='${user.password}');`;
 
   try {
-    const response = client.query(Query);
+    const response = await client.query(Query);
+    console.log("response:", response);
     if (response["rowCount"]) {
-      return res.status(200).send({ success: "true" });
+      return res.status(200).send({ result: response });
     } else {
       return res.status(500).send({ success: "false" });
     }
@@ -100,7 +101,7 @@ app.post("/add-category", async (req, res) => {
 app.post("/user-id", async (req, res) => {
   const request = req.body;
   const client = await pool.connect();
-  const Query = `SELECT id FROM users WHERE (email='${request.email}' AND password='${request.password}');`;
+  const Query = `SELECT * FROM users WHERE (email='${request.email}' AND password='${request.password}');`;
   try {
     client.query(Query);
     res.status(200).send({ id: "id" });
