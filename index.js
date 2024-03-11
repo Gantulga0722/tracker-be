@@ -98,21 +98,6 @@ app.post("/add-category", async (req, res) => {
   }
 });
 
-app.post("/user-id", async (req, res) => {
-  const request = req.body;
-  const client = await pool.connect();
-  const Query = `SELECT * FROM users WHERE (email='${request.email}' AND password='${request.password}');`;
-  try {
-    client.query(Query);
-    res.status(200).send({ id: "id" });
-  } catch (e) {
-    console.log(e);
-  } finally {
-    client.release();
-    console.log("Id is picked");
-  }
-});
-
 // app.post("/update-category", async (req, res) => {
 //   const client = await pool.connect();
 //   const Query = "ALTER TABLE category ALTER COLUMN id TYPE VARCHAR(255)";
