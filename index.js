@@ -25,6 +25,7 @@ router.post("/signup", signup);
 router.post("/currency-select", currencySelect);
 router.post("/add-category", addCategory);
 router.post("/alter-table", alterTable);
+router.get("/get-category", alterTable);
 
 app.use(router);
 
