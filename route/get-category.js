@@ -20,7 +20,7 @@ exports.getCategory = async (req, res) => {
   const Query = `SELECT * FROM category`;
   try {
     const response = await client.query(Query);
-    res.status(200).send({ response });
+    res.status(200).send({ result: response });
   } catch (e) {
     console.log(e);
   } finally {

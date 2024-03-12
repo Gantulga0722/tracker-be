@@ -15,6 +15,7 @@ const { login } = require("./route/login");
 const { currencySelect } = require("./route/currency-select");
 const { addCategory } = require("./route/add-category");
 const { alterTable } = require("./route/alter-table");
+const { getCategory } = require("./route/alter-table");
 
 const fs = require("fs");
 
@@ -25,7 +26,7 @@ router.post("/signup", signup);
 router.post("/currency-select", currencySelect);
 router.post("/add-category", addCategory);
 router.post("/alter-table", alterTable);
-router.get("/get-category", alterTable);
+router.get("/get-category", getCategory);
 
 app.use(router);
 
