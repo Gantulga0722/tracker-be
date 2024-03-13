@@ -17,7 +17,7 @@ exports.addCategory = async (req, res) => {
   const request = req.body;
   console.log(request);
   const client = await pool.connect();
-  const Query = `INSERT INTO category (category_image, name, id) VALUES('${request.icon}','${request.name}', '${request.id}');`;
+  const Query = `INSERT INTO category (category_image, name, id) VALUES('${request.icon}','${request.name}','${request.id}');`;
   try {
     client.query(Query);
     res.status(200).send({ message: "success" });
