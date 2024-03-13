@@ -1,19 +1,20 @@
 const { Pool } = require("pg");
 
-let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
+const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, PGPORT } = process.env;
 
 const pool = new Pool({
   host: PGHOST,
   database: PGDATABASE,
   username: PGUSER,
   password: PGPASSWORD,
-  port: 5432,
+  port: PGPORT,
   ssl: {
     require: true,
   },
+  keepAlive: true,
 });
 
-async function signup(userInfo) {
+async function addUser(userInfo) {
   let response;
   const client = await pool.connect();
   const Query =
@@ -22,8 +23,8 @@ async function signup(userInfo) {
   try {
     response = await client.query(Query);
   } catch (error) {
+    console.log(error);
     throw new Error(error ? error.message : "Error");
-    console.log(e);
   } finally {
     client.release();
     console.log("user add successfully");
@@ -31,14 +32,15 @@ async function signup(userInfo) {
   return response.rows;
 }
 
-async function login() {
+async function getUser(userInfo) {
   let response;
   const client = await pool.connect();
-  const Query = `SELECT * FROM users WHERE (email='${user.email}' AND password='${user.password}');`;
+  const Query =
+    ("SELECT * FROM users WHERE (email=$1 AND password=$2)",
+    [userInfo.email, userInfo.password]);
 
   try {
-    const response = await client.query(Query);
-    console.log("response:", response);
+    response = await client.query(Query);
     if (response["rowCount"]) {
       return res.status(200).send({ result: response });
     } else {
@@ -53,10 +55,12 @@ async function login() {
   }
 }
 
-async function currencySelect() {
+async function currencySelect(userInfo) {
   const request = req.body;
   const client = await pool.connect();
-  const Query = `UPDATE users SET currency_type='${request.currency}' WHERE (id='${request.id}');`;
+  const Query =
+    ("UPDATE users SET currency_type=$1 WHERE (id=$2",
+    [userInfo.currency, userInfo.id]);
   try {
     const response = client.query(Query);
     if (response["rowCount"]) {
@@ -72,3 +76,9 @@ async function currencySelect() {
     console.log("Currency added successfully");
   }
 }
+
+module.exports = {
+  addUser,
+  getUser,
+  currencySelect,
+};
