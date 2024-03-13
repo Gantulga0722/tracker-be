@@ -2,7 +2,7 @@ const { Pool } = require("pg");
 
 const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, PGPORT } = process.env;
 
-const pool = new Pool({
+const pgConif = {
   host: PGHOST,
   database: PGDATABASE,
   username: PGUSER,
@@ -11,19 +11,19 @@ const pool = new Pool({
   ssl: {
     require: true,
   },
-  keepAlive: true,
-});
+};
+
+const pool = new Pool(pgConif);
 
 async function addUser(userInfo) {
   let response;
   const client = await pool.connect();
   const Query =
-    ("INSERT INTO users (name, email, password, id) VALUES ($1, $2, $3)",
-    [userInfo.name, userInfo.email, userInfo.password]);
+    (`INSERT INTO users (name, email, password, id) VALUES ($1, $2, $3, $4)`,
+    [userInfo.name, userInfo.email, userInfo.password, userInfo.id]);
   try {
     response = await client.query(Query);
   } catch (error) {
-    console.log(error);
     throw new Error(error ? error.message : "Error");
   } finally {
     client.release();
