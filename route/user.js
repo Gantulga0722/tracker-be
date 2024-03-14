@@ -3,6 +3,7 @@ const { addUser, getUser, currencySelect } = require("../service/user-service");
 
 userRouter.post("/signup", async (req, res) => {
   const newUserData = req.body;
+  console.log("route", newUserData);
   const result = await addUser(newUserData);
   res.json(result);
 });
@@ -10,13 +11,21 @@ userRouter.post("/signup", async (req, res) => {
 userRouter.post("/login", async (req, res) => {
   const newUserData = req.body;
   const result = await getUser(newUserData);
-  res.json(result);
+  if (result["rowCount"]) {
+    return res.status(200).send({ result: result });
+  } else {
+    return res.status(500).send({ success: "false" });
+  }
 });
 
 userRouter.post("/currency-select", async (req, res) => {
   const newUserData = req.body;
   const result = await currencySelect(newUserData);
-  res.json(result);
+  if (result["rowCount"]) {
+    return res.status(200).send({ message: "Success" });
+  } else {
+    return res.status(500).send({ message: "Something went wrong" });
+  }
 });
 
 module.exports = {

@@ -1,3 +1,4 @@
+const { response } = require("express");
 const { Pool } = require("pg");
 
 const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, PGPORT } = process.env;
@@ -16,11 +17,12 @@ const pgConif = {
 const pool = new Pool(pgConif);
 
 async function addUser(userInfo) {
+  console.log(userInfo);
   let response;
+
   const client = await pool.connect();
-  const Query =
-    (`INSERT INTO users (name, email, password, id) VALUES ($1, $2, $3, $4)`,
-    [userInfo.name, userInfo.email, userInfo.password, userInfo.id]);
+
+  const Query = `INSERT INTO users (name, email, password, id) VALUES ('${userInfo.name}', '${userInfo.email}', '${userInfo.password}', '${userInfo.id}')`;
   try {
     response = await client.query(Query);
   } catch (error) {
@@ -29,23 +31,16 @@ async function addUser(userInfo) {
     client.release();
     console.log("user add successfully");
   }
+  console.log(response.rows);
   return response.rows;
 }
 
 async function getUser(userInfo) {
   let response;
   const client = await pool.connect();
-  const Query =
-    ("SELECT * FROM users WHERE (email=$1 AND password=$2)",
-    [userInfo.email, userInfo.password]);
-
+  const Query = `SELECT * FROM users WHERE (email='${userInfo.email}' AND password='${userInfo.password}');`;
   try {
     response = await client.query(Query);
-    if (response["rowCount"]) {
-      return res.status(200).send({ result: response });
-    } else {
-      return res.status(500).send({ success: "false" });
-    }
   } catch (error) {
     throw new Error(error ? error.message : "Error");
     console.log(e);
@@ -53,21 +48,15 @@ async function getUser(userInfo) {
     client.release();
     console.log("user add successfully");
   }
+  return response;
 }
 
 async function currencySelect(userInfo) {
-  const request = req.body;
   const client = await pool.connect();
-  const Query =
-    ("UPDATE users SET currency_type=$1 WHERE (id=$2",
-    [userInfo.currency, userInfo.id]);
+  const Query = `UPDATE users SET currency_type='${userInfo.currency}' WHERE (id='${userInfo.id}');`;
+
   try {
     const response = client.query(Query);
-    if (response["rowCount"]) {
-      return res.status(200).send({ message: "Success" });
-    } else {
-      return res.status(500).send({ message: "Something went wrong" });
-    }
   } catch (error) {
     console.log(e);
     throw new Error(error ? error.message : "Error");
@@ -75,6 +64,7 @@ async function currencySelect(userInfo) {
     client.release();
     console.log("Currency added successfully");
   }
+  return response;
 }
 
 module.exports = {
