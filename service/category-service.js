@@ -50,10 +50,11 @@ async function getCategory() {
 
   return response.rows;
 }
+
 async function deleteCategory() {
   let response;
   const client = await pool.connect();
-  const Query = "DELETE FROM category WHERE (name='undefined');";
+  const Query = "DELETE FROM category WHERE (name='Forex');";
   try {
     response = await client.query(Query);
   } catch (e) {
@@ -65,8 +66,24 @@ async function deleteCategory() {
   return response;
 }
 
+async function updateCategory() {
+  let response;
+  const client = await pool.connect();
+  const Query = "ALTER TABLE category ADD PRIMARY KEY (id)";
+  try {
+    response = await client.query(Query);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    client.release();
+    console.log("category updated successfully");
+  }
+  return response;
+}
+
 module.exports = {
   getCategory,
   deleteCategory,
   addCategory,
+  updateCategory,
 };

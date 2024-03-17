@@ -1,5 +1,10 @@
 const userRouter = require("express").Router();
-const { addUser, getUser, currencySelect } = require("../service/user-service");
+const {
+  addUser,
+  getUser,
+  currencySelect,
+  updateUser,
+} = require("../service/user-service");
 
 userRouter.post("/signup", async (req, res) => {
   const newUserData = req.body;
@@ -26,6 +31,12 @@ userRouter.post("/currency-select", async (req, res) => {
   } else {
     return res.status(500).send({ message: "Something went wrong" });
   }
+});
+
+userRouter.post("/update-users", async (req, res) => {
+  const result = await updateUser();
+
+  res.json(result);
 });
 
 module.exports = {

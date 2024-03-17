@@ -67,8 +67,24 @@ async function currencySelect(userInfo) {
   return response;
 }
 
+async function updateUser() {
+  let response;
+  const client = await pool.connect();
+  const Query = "ALTER TABLE users ADD PRIMARY KEY (id)";
+  try {
+    response = await client.query(Query);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    client.release();
+    console.log("user updated successfully");
+  }
+  return response;
+}
+
 module.exports = {
   addUser,
   getUser,
   currencySelect,
+  updateUser,
 };

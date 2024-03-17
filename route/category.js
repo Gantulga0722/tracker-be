@@ -3,6 +3,7 @@ const {
   addCategory,
   getCategory,
   deleteCategory,
+  updateCategory,
 } = require("../service/category-service");
 
 categoryRouter.post("/add-category", async (req, res) => {
@@ -20,6 +21,11 @@ categoryRouter.get("/get-category", async (req, res) => {
 
 categoryRouter.post("/delete-category", async (req, res) => {
   const result = await deleteCategory();
+
+  res.json(result);
+});
+categoryRouter.post("/update-category", async (req, res) => {
+  const result = await updateCategory();
 
   res.json(result);
 });
