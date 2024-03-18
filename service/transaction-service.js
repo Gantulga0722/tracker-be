@@ -38,7 +38,7 @@ async function addTransaction(transactionInfo) {
 async function updateTransaction() {
   let response;
   const client = await pool.connect();
-  const Query = "ALTER TABLE transaction ALTER COLUMN id TYPE VARCHAR(255)";
+  const Query = "ALTER TABLE transaction ADD FOREIGN KEY (user_id)";
   try {
     response = await client.query(Query);
   } catch (e) {
